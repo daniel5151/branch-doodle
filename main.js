@@ -6,7 +6,7 @@ let ctx;
 // let rules = [1,2,3,4];
 
 // Finite
-// let rules = [4,3,2,1,2];
+// let rules = [3,2,1,4];
 
 let rules = [4,3,2,1]
 let uvars = {
@@ -190,8 +190,6 @@ function step() {
 
         if (Object.keys(turtles).length > uvars.max_turtles    ) return;
         if (generation                  > uvars.max_generations) return;
-
-        console.log(generation);
     }
 
     anim_frame = requestAnimationFrame(step);
@@ -240,7 +238,40 @@ function init () {
     canvas = document.getElementById("drawingboard");
     ctx = canvas.getContext("2d");
 
-    let gui = new dat.GUI();
+    let gui = new dat.GUI({load:{
+      "preset": "Lanes",
+      "remembered": {
+        "Lanes": {
+          "0": {
+            "rules_string": "4,3,2,1",
+            "line_size": 20,
+            "line_thickness": 2,
+            "speed": 4,
+            "max_generations": 50,
+            "max_turtles": 500
+          }
+        },
+        "Finite": {
+          "0": {
+            "rules_string": "3,2,1,4",
+            "line_size": 20,
+            "line_thickness": 2,
+            "speed": 4,
+            "max_generations": 50,
+            "max_turtles": 500
+          }
+        }
+      },
+      "closed": false,
+      "folders": {
+        "Constraints": {
+          "preset": "Default",
+          "closed": false,
+          "folders": {}
+        }
+      }
+    }});
+    gui.remember(uvars);
 
     let rule_controller = gui.add(uvars, 'rules_string');
     let size_controller = gui.add(uvars, 'line_size',1,30);
@@ -254,8 +285,6 @@ function init () {
     constraint_folder.open();
 
     gui.add(uvars, 'reset');
-
-    gui.remember(uvars);
 
     rule_controller.onFinishChange(function(new_rules) {
         // Fires when a controller loses focus.
