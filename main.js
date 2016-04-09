@@ -1,7 +1,13 @@
 let canvas;
 let ctx;
 
+// Neat design
 let rules = [4,3,2,1];
+
+// Finite
+// let rules = [4,3,2,1,2];
+
+// let rules = [1,2,2,1];
 
 let dirs = [
     [-1,-1],
@@ -16,10 +22,11 @@ let dirs = [
 
 let turtlecount = 0;
 class Turtle {
-    constructor(x,y,dir) {
+    constructor(x,y,dir,v) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.v = v;
 
         this.id = turtlecount;
         turtlecount++;
@@ -32,13 +39,13 @@ class Turtle {
             this.y
         );
         ctx.lineTo(
-            this.x + dirs[this.dir][0] * 20,
-            this.y + dirs[this.dir][1] * 20
+            this.x + dirs[this.dir][0] * this.v,
+            this.y + dirs[this.dir][1] * this.v
         );
         ctx.stroke();
 
-        this.x += dirs[this.dir][0] * 20;
-        this.y += dirs[this.dir][1] * 20;
+        this.x += dirs[this.dir][0] * this.v;
+        this.y += dirs[this.dir][1] * this.v;
 
         this.x = Math.floor(this.x);
         this.y = Math.floor(this.y);
@@ -59,7 +66,7 @@ class Turtle {
     };
 
     static clone (turtle) {
-        return new Turtle(turtle.x,turtle.y,turtle.dir);
+        return new Turtle(turtle.x,turtle.y,turtle.dir,turtle.v);
     }
 }
 
@@ -154,16 +161,16 @@ function step() {
     time = now;
     timer += dt;
 
-    if (timer >= 500) {
-        timer %= 500;
+    if (timer >= 125) {
+        timer %= 12;
 
         move_turtles();
-
         branch();
 
         generation++;
 
-        if (generation == 30) return;
+        if (Object.keys(turtles).length > 500) return;
+        if (generation                  > 50) return;
 
         console.log(generation);
     }
@@ -186,7 +193,8 @@ function init () {
     turtles[1] = new Turtle(
         Math.floor(canvas.width / 2),
         Math.floor(canvas.height / 2),
-        7
+        7,
+        20
     );
 
     window.requestAnimationFrame(step);
