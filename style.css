@@ -3,6 +3,21 @@ body {
     padding: 0;
 }
 
-#drawingboard {
+.comment {
+    position: absolute;
+    bottom: 0.25em;
+    left: 0.25em;
+    font-size: 1em;
+    font-family: 'Open Sans', sans-serif;
+}
 
+.comment a {
+    text-decoration: none;
+    font-weight: 600;
+    color: black;
+    transition: color 0.125s;
+}
+
+.comment a:hover {
+    color: grey;
 }
