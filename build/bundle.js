@@ -301,7 +301,7 @@ function init() {
                         "initial_pos": "center"
                     }
                 },
-                "Serpinsky": {
+                "Sierpinsky": {
                     "0": {
                         "rules_string": "4,3,2,1,3",
                         "speed": 8.998647383206746,
