@@ -21,6 +21,7 @@ var rules = [4, 3, 2, 1];
 var last_good_rules_string = "4,3,2,1";
 var uvars = {
     rules_string: "4,3,2,1",
+    initial_pos: "center",
     max_generations: 50,
     max_turtles: 500,
     speed: 4,
@@ -154,6 +155,11 @@ function branch() {
         if (!taken) {
             var move = rules[generation % rules.length];
 
+            // Experimental
+            // let modifier = Math.floor(((255/(rules.length))*generation) % 255);
+            // let new_color = "rgb("+modifier+","+modifier+","+modifier+")";
+            // ctx.strokeStyle = new_color;
+
             switch (move) {
                 case 0:
                     break;
@@ -256,8 +262,12 @@ function init_graph() {
     });
     turtles = {};
 
-    // Spawn initial turtle facing up in the center
-    turtles[1] = new Turtle(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 7, uvars.line_size);
+    // Spawn initial turtle facing up
+    if (uvars.initial_pos == "center") {
+        turtles[1] = new Turtle(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 7, uvars.line_size);
+    } else if (uvars.initial_pos == "top") {
+        turtles[1] = new Turtle(Math.floor(canvas.width / 2), 20, 7, uvars.line_size);
+    }
 
     anim_frame = requestAnimationFrame(step);
 }
@@ -271,12 +281,13 @@ function init() {
             "remembered": {
                 "Lanes": {
                     "0": {
-                        "rules_string": "4,3,2,1",
+                        "rules_string": "4,3,2,1,1",
                         "line_size": 20,
                         "line_thickness": 2,
                         "speed": 4,
                         "max_generations": 50,
-                        "max_turtles": 500
+                        "max_turtles": 500,
+                        initial_pos: "center"
                     }
                 },
                 "Finite": {
@@ -286,12 +297,29 @@ function init() {
                         "line_thickness": 2,
                         "speed": 4,
                         "max_generations": 50,
-                        "max_turtles": 500
+                        "max_turtles": 500,
+                        "initial_pos": "center"
+                    }
+                },
+                "Serpinsky": {
+                    "0": {
+                        "rules_string": "4,3,2,1,3",
+                        "speed": 8.998647383206746,
+                        "line_size": 4,
+                        "line_thickness": 1,
+                        "max_generations": 157,
+                        "max_turtles": 500,
+                        "initial_pos": "top"
                     }
                 }
             },
             "closed": false,
             "folders": {
+                "Render Options": {
+                    "preset": "Default",
+                    "closed": false,
+                    "folders": {}
+                },
                 "Constraints": {
                     "preset": "Default",
                     "closed": false,
@@ -301,17 +329,24 @@ function init() {
         } });
     gui.remember(uvars);
 
+    // Important simulation variables
     var rule_controller = gui.add(uvars, 'rules_string');
-    var size_controller = gui.add(uvars, 'line_size', 1, 30);
-    gui.add(uvars, 'line_thickness', 1, 5);
     gui.add(uvars, 'speed', 1, 10);
+    gui.add(uvars, 'initial_pos', ["center", "top"]);
 
+    // Rendering options
+    var render_folder = gui.addFolder('Render Options');
+    var size_controller = render_folder.add(uvars, 'line_size', 1, 30);
+    render_folder.add(uvars, 'line_thickness', 1, 5);
+    render_folder.open();
+
+    // Constraint options
     var constraint_folder = gui.addFolder('Constraints');
     constraint_folder.add(uvars, 'max_generations', 0, 500);
     constraint_folder.add(uvars, 'max_turtles', 0, 1000);
-
     constraint_folder.open();
 
+    // Reset / stop
     gui.add(uvars, 'stop');
     gui.add(uvars, 'reset');
 
