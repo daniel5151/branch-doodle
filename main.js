@@ -26,6 +26,7 @@ let uvars = {
 
 function parse_rules (new_rules_string) {
     let new_rules = new_rules_string.split(",").map(x => parseInt(x));
+
     let valid = new_rules.every(x => (x >= 0 && x <= 4));
     if (!valid) {
         alert("Invalid Input! Valid branch numbers are 0-4 inclusive.");
@@ -294,10 +295,21 @@ let PRESETS = {
         "initial_pos": "center"
       }
     },
+    "Intricate": {
+      "0": {
+        "rules_string": "3,2,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4",
+        "speed": 4,
+        "initial_pos": "center",
+        "line_size": 6,
+        "line_thickness": 2,
+        "max_generations": 154,
+        "max_turtles": 500
+      }
+    },
     "Sierpinsky": {
       "0": {
         "rules_string": "4,3,2,1,3",
-        "speed": 8.998647383206746,
+        "speed": 9,
         "line_size": 4,
         "line_thickness": 1,
         "max_generations": 157,
