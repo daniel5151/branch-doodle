@@ -270,7 +270,7 @@ function init_graph () {
 }
 
 let PRESETS = {
-  "preset": "Squares",
+  "preset": "Lanes",
   "remembered": {
     "Lanes": {
       "0": {

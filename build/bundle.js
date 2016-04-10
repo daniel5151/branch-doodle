@@ -275,7 +275,7 @@ function init_graph() {
 }
 
 var PRESETS = {
-    "preset": "Squares",
+    "preset": "Lanes",
     "remembered": {
         "Lanes": {
             "0": {
