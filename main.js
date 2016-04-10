@@ -150,6 +150,8 @@ function branch () {
 
             // Experimental
             // let modifier = Math.floor(((255/(rules.length))*generation) % 255);
+            // let modifier = (generation % 126)*2;
+
             // let new_color = "rgb("+modifier+","+modifier+","+modifier+")";
             // ctx.strokeStyle = new_color;
 
@@ -267,61 +269,74 @@ function init_graph () {
     anim_frame = requestAnimationFrame(step);
 }
 
+let PRESETS = {
+  "preset": "Squares",
+  "remembered": {
+    "Lanes": {
+      "0": {
+        "rules_string": "4,3,2,1,1",
+        "line_size": 20,
+        "line_thickness": 2,
+        "speed": 4,
+        "max_generations": 50,
+        "max_turtles": 500,
+        "initial_pos": "center"
+      }
+    },
+    "Finite": {
+      "0": {
+        "rules_string": "3,2,1,4",
+        "line_size": 20,
+        "line_thickness": 2,
+        "speed": 4,
+        "max_generations": 50,
+        "max_turtles": 500,
+        "initial_pos": "center"
+      }
+    },
+    "Sierpinsky": {
+      "0": {
+        "rules_string": "4,3,2,1,3",
+        "speed": 8.998647383206746,
+        "line_size": 4,
+        "line_thickness": 1,
+        "max_generations": 157,
+        "max_turtles": 500,
+        "initial_pos": "top"
+      }
+    },
+    "Squares": {
+      "0": {
+        "rules_string": "1,1,1,1,1,3,1,2",
+        "speed": 10,
+        "initial_pos": "center",
+        "line_size": 8,
+        "line_thickness": 2,
+        "max_generations": 153.05765463196178,
+        "max_turtles": 371.71144696333573
+      }
+    }
+  },
+  "closed": false,
+  "folders": {
+    "Render Options": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    },
+    "Constraints": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    }
+  }
+};
+
 function init () {
     canvas = document.getElementById("drawingboard");
     ctx = canvas.getContext("2d");
 
-    gui = new dat.GUI({load:{
-      "preset": "Lanes",
-      "remembered": {
-        "Lanes": {
-          "0": {
-            "rules_string": "4,3,2,1,1",
-            "line_size": 20,
-            "line_thickness": 2,
-            "speed": 4,
-            "max_generations": 50,
-            "max_turtles": 500,
-            initial_pos:"center"
-          }
-        },
-        "Finite": {
-          "0": {
-            "rules_string": "3,2,1,4",
-            "line_size": 20,
-            "line_thickness": 2,
-            "speed": 4,
-            "max_generations": 50,
-            "max_turtles": 500,
-            "initial_pos":"center"
-          }
-        },
-        "Sierpinsky": {
-          "0": {
-            "rules_string": "4,3,2,1,3",
-            "speed": 8.998647383206746,
-            "line_size": 4,
-            "line_thickness": 1,
-            "max_generations": 157,
-            "max_turtles": 500,
-            "initial_pos": "top"
-          }
-        }
-      },
-      "closed": false,
-      "folders": {
-        "Render Options": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        },
-        "Constraints": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        }
-      }
-    }});
+    gui = new dat.GUI({load:PRESETS});
     gui.remember(uvars);
 
     // Important simulation variables
