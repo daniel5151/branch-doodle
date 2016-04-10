@@ -8,6 +8,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var canvas = void 0;
 var ctx = void 0;
 
+var gui = void 0;
+
 // Neat design
 // let rules = [4,3,2,1];
 // let rules = [1,2,3,4];
@@ -16,6 +18,7 @@ var ctx = void 0;
 // let rules = [3,2,1,4];
 
 var rules = [4, 3, 2, 1];
+var last_good_rules_string = "4,3,2,1";
 var uvars = {
     rules_string: "4,3,2,1",
     max_generations: 50,
@@ -23,15 +26,32 @@ var uvars = {
     speed: 4,
     line_size: 20,
     line_thickness: 2,
+    stop: function stop() {
+        window.cancelAnimationFrame(anim_frame);
+    },
     reset: function reset() {
         init_graph();
     }
 };
 
-function parse_rules(new_rules) {
-    rules = new_rules.split(",").map(function (x) {
+function parse_rules(new_rules_string) {
+    var new_rules = new_rules_string.split(",").map(function (x) {
         return parseInt(x);
     });
+    var valid = new_rules.every(function (x) {
+        return x >= 0 && x <= 4;
+    });
+    if (!valid) {
+        alert("Invalid Input! Valid branch numbers are 0-4 inclusive.");
+
+        uvars.rules_string = last_good_rules_string;
+        for (var i in gui.__controllers) {
+            gui.__controllers[i].updateDisplay();
+        }
+    } else {
+        last_good_rules_string = new_rules_string;
+        rules = new_rules;
+    }
 }
 
 var dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
@@ -135,6 +155,8 @@ function branch() {
             var move = rules[generation % rules.length];
 
             switch (move) {
+                case 0:
+                    break;
                 case 1:
                     new_turtles.push(Turtle.clone(t));
                     break;
@@ -154,7 +176,7 @@ function branch() {
                     new_turtles.push(Turtle.clone(t).right().right());
                     break;
                 default:
-                    alert("Sorry, you can only use 1-4.");
+                    alert("ERR: Invalid move");
             }
         }
 
@@ -244,7 +266,7 @@ function init() {
     canvas = document.getElementById("drawingboard");
     ctx = canvas.getContext("2d");
 
-    var gui = new dat.GUI({ load: {
+    gui = new dat.GUI({ load: {
             "preset": "Lanes",
             "remembered": {
                 "Lanes": {
@@ -290,12 +312,12 @@ function init() {
 
     constraint_folder.open();
 
+    gui.add(uvars, 'stop');
     gui.add(uvars, 'reset');
 
     rule_controller.onFinishChange(function (new_rules) {
         // Fires when a controller loses focus.
         parse_rules(new_rules);
-        console.log("The new value is " + new_rules);
         init_graph();
     });
     size_controller.onFinishChange(function (new_rules) {

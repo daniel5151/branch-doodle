@@ -1,6 +1,8 @@
 let canvas;
 let ctx;
 
+let gui;
+
 // Neat design
 // let rules = [4,3,2,1];
 // let rules = [1,2,3,4];
@@ -9,6 +11,7 @@ let ctx;
 // let rules = [3,2,1,4];
 
 let rules = [4,3,2,1]
+let last_good_rules_string = "4,3,2,1";
 let uvars = {
     rules_string: "4,3,2,1",
     max_generations: 50,
@@ -16,11 +19,24 @@ let uvars = {
     speed:4,
     line_size:20,
     line_thickness: 2,
+    stop:function() { window.cancelAnimationFrame(anim_frame); },
     reset:function () { init_graph() }
 }
 
-function parse_rules (new_rules) {
-    rules = new_rules.split(",").map(x => parseInt(x));
+function parse_rules (new_rules_string) {
+    let new_rules = new_rules_string.split(",").map(x => parseInt(x));
+    let valid = new_rules.every(x => (x >= 0 && x <= 4));
+    if (!valid) {
+        alert("Invalid Input! Valid branch numbers are 0-4 inclusive.");
+        
+        uvars.rules_string = last_good_rules_string;
+        for (var i in gui.__controllers) {
+            gui.__controllers[i].updateDisplay();
+        }
+    } else {
+        last_good_rules_string = new_rules_string;
+        rules = new_rules;
+    }
 }
 
 
@@ -132,6 +148,8 @@ function branch () {
             let move = rules[generation % rules.length];
 
             switch (move) {
+                case 0:
+                    break;
                 case 1:
                     new_turtles.push( Turtle.clone(t) );
                     break;
@@ -151,7 +169,7 @@ function branch () {
                     new_turtles.push( Turtle.clone(t).right().right() );
                     break;
                 default:
-                    alert("Sorry, you can only use 1-4.");
+                    alert("ERR: Invalid move");
             }
         }
 
@@ -238,7 +256,7 @@ function init () {
     canvas = document.getElementById("drawingboard");
     ctx = canvas.getContext("2d");
 
-    let gui = new dat.GUI({load:{
+    gui = new dat.GUI({load:{
       "preset": "Lanes",
       "remembered": {
         "Lanes": {
@@ -284,12 +302,12 @@ function init () {
 
     constraint_folder.open();
 
+    gui.add(uvars, 'stop');
     gui.add(uvars, 'reset');
 
     rule_controller.onFinishChange(function(new_rules) {
         // Fires when a controller loses focus.
         parse_rules(new_rules);
-        console.log("The new value is " + new_rules);
         init_graph();
     });
     size_controller.onFinishChange(function(new_rules) {
