@@ -270,6 +270,8 @@ function init_graph() {
         turtles[1] = new Turtle(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 7, uvars.line_size);
     } else if (uvars.initial_pos == "top") {
         turtles[1] = new Turtle(Math.floor(canvas.width / 2), 20, 7, uvars.line_size);
+    } else if (uvars.initial_pos == "bottom") {
+        turtles[1] = new Turtle(Math.floor(canvas.width / 2), Math.floor(canvas.height) - 20, 7, uvars.line_size);
     }
 
     anim_frame = requestAnimationFrame(step);
@@ -329,8 +331,19 @@ var PRESETS = {
                 "initial_pos": "center",
                 "line_size": 8,
                 "line_thickness": 2,
-                "max_generations": 153.05765463196178,
-                "max_turtles": 371.71144696333573
+                "max_generations": 153,
+                "max_turtles": 3750
+            }
+        },
+        "Infinite V": {
+            "0": {
+                "rules_string": "1,2,3,2,2,1,2",
+                "speed": 8,
+                "initial_pos": "bottom",
+                "line_size": 6,
+                "line_thickness": 2,
+                "max_generations": 325,
+                "max_turtles": 350
             }
         }
     },
@@ -359,7 +372,7 @@ function init() {
     // Important simulation variables
     var rule_controller = gui.add(uvars, 'rules_string');
     gui.add(uvars, 'speed', 1, 10);
-    gui.add(uvars, 'initial_pos', ["center", "top"]);
+    gui.add(uvars, 'initial_pos', ["bottom", "center", "top"]);
 
     // Rendering options
     var render_folder = gui.addFolder('Render Options');
